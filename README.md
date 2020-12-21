@@ -33,12 +33,11 @@
 
 1.  If not installed, install Redis from [https://redislabs.com/ebook/appendix-a/a-3-installing-on-windows/a-3-2-installing-redis-on-window/](https://redislabs.com/ebook/appendix-a/a-3-installing-on-windows/a-3-2-installing-redis-on-window/)
 2.  Start Redis Server:
-    > a) - navigate to the server folder with `cd server`
-    > b) - Navigate to the folder where you installed redis. Ex: `cd ../../../../Programs/redis-2.4.5-win32-win64/64bit`
-    > c) - And enter `redis-server` to start the server
-    > d) - Leave this terminal open until you wish to shut down the server with CTRL + C and enter `y`
+    > a) - Navigate to the folder where you installed redis. Ex: `cd ../../../../Programs/redis-2.4.5-win32-win64/64bit`
+    > b) - And enter `redis-server` to start the server
+    > c) - Leave this terminal open until you wish to shut down the server with CTRL + C and enter `y`
 3.  Open new terminal window
-4.  Repeat steps 2a and 2b
+4.  Repeat step 2a
 5.  Enter `redis-cli` to open the redis CLI
     > Now you can use `get [key-name]` to access any redis variables you set
 
