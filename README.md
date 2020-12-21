@@ -76,3 +76,5 @@
 ##### - Server
 
 > - Comment out line 1 of server.js pre-deployment
+> - Change line 4 of redis/redis.js to:
+>   > - `let redisClient = redis.createClient(process.env.REDIS_URL);`

@@ -1,7 +1,7 @@
 const redis = require('redis');
 const session = require('express-session');
 let RedisStore = require('connect-redis')(session);
-let redisClient = redis.createClient();
+let redisClient = redis.createClient(process.env.REDIS_URL);
 const bluebird = require('bluebird'); //Import Bluebird to make redis get/set-Async calls promises
 bluebird.promisifyAll(redis.RedisClient.prototype);
 
