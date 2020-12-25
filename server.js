@@ -1,4 +1,4 @@
-//require(`dotenv`).config();
+require(`dotenv`).config();
 const app = require('express')();
 const server = require('http').createServer(app);
 
@@ -53,9 +53,14 @@ io.on('connection', async (socket) => {
    })
 
    socket.on(`quit`, async ({ game })=>{
+      console.log(`Quit Event`)
       const gameStateJSON = await redisClient.getAsync(`${game}`)
       const gameState = JSON.parse(gameStateJSON);
-      if( !gameState.winner && !gameState.draw ) socket.to(game).emit(`quit`, game) 
+      if( !gameState.winner && !gameState.draw ) socket.to(game).emit(`quit`, game)
+      if( !gameState.status ){
+         const newGameState = JSON.stringify( { ...gameState, status: true } )
+         await redisClient.setAsync(`${game}`, newGameState)
+      }
    })
  });
 
