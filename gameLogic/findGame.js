@@ -16,7 +16,7 @@ const findGame = async (socket, io)=>{
 
       const gamesJSON = await redisClient.getAsync('games');
       const games = JSON.parse(gamesJSON);
-      console.log(`findGame.js line 19`, games)
+      console.log({games})
       const latestGame = games[games.length - 1]
       const latestGameStateJSON = await redisClient.getAsync(`${latestGame}`)
       const latestGameState = JSON.parse(latestGameStateJSON)
@@ -25,7 +25,7 @@ const findGame = async (socket, io)=>{
          socket.join(`${latestGame}`)
          const updatedLatestGameState = { ...latestGameState, status: true}
          await redisClient.setAsync(`${latestGame}`, JSON.stringify(updatedLatestGameState))
-         socket.emit("join", { ...updatedLatestGameState, player: `O`, note: ``}) //Communicate to second player Game number and player (O)
+         socket.emit("join", { ...updatedLatestGameState, player: `O`, note: `This is game #${latestGame} and player O has joined the game.  Ready to play`}) //Communicate to second player Game number and player (O)
          return updatedLatestGameState
 
       } else {    //Handle creating new games after the first new game

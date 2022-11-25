@@ -1,4 +1,4 @@
-require(`dotenv`).config();
+// require(`dotenv`).config();
 const app = require('express')();
 const server = require('http').createServer(app);
 
@@ -10,7 +10,7 @@ const io = require('socket.io')(server, {
       methods: ["GET", "POST"],
       credentials: true
    }
-});  //const options = {  }; //{ perMessageDeflate: false }
+});
 const { redisClient, RedisStore } = require('./redis/redis');
 
 const { initiateBoard } = require('./gameLogic/board');
