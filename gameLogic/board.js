@@ -16,6 +16,7 @@ const initiateBoard = async(game)=>{
     }
     const gameStateJSON = JSON.stringify(gameState)
     await redisClient.setAsync(game, gameStateJSON)
+    console.log(`board.js line 19`, gameState)
     return gameState
 }
 
