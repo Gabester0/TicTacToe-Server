@@ -16,7 +16,7 @@ const findGame = async (socket, io)=>{
 
       const gamesJSON = await redisClient.getAsync('games');
       const games = JSON.parse(gamesJSON);
-      console.log(games)
+      console.log({games})
       const latestGame = games[games.length - 1]
       const latestGameStateJSON = await redisClient.getAsync(`${latestGame}`)
       const latestGameState = JSON.parse(latestGameStateJSON)

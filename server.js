@@ -3,7 +3,14 @@ const app = require('express')();
 const server = require('http').createServer(app);
 
 const session = require('express-session');
-const io = require('socket.io')(server);  //const options = {  }; //{ perMessageDeflate: false }
+const io = require('socket.io')(server, {
+   allowEIO3: true,
+   cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"],
+      credentials: true
+   }
+});
 const { redisClient, RedisStore } = require('./redis/redis');
 
 const { initiateBoard } = require('./gameLogic/board');
@@ -22,9 +29,10 @@ io.on('connection', async (socket) => {
    console.log(`Socket Connected`, socket.id)
 
    const { game, status } = await findGame(socket, io)
-   console.log(`SERVER.js line 25`, game, status)
+   console.log(`SERVER.js line 32`, game, status)
    if(status){
       const initialGame = await initiateBoard(game)
+      console.log(`emitting start, `, initialGame)
       io.to(game).emit(`start`, initialGame)
    }
 
@@ -45,7 +53,7 @@ io.on('connection', async (socket) => {
    socket.on(`initiatePlayAgain`, async({currentGame, client})=>{
       socket.leave(currentGame)
       const { game, status } = await findGame(socket, io)
-      console.log(game, status)
+      console.log(`server.js line 56`, game, status)
       if(status){
          const initialGame = await initiateBoard(game)
          io.to(game).emit(`start`, initialGame)
