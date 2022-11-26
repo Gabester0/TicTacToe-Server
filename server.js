@@ -6,7 +6,7 @@ const session = require('express-session');
 const io = require('socket.io')(server, {
    allowEIO3: true,
    cors: {
-      origin: "http://localhost:3000",
+      origin: "https://eipper-tictactoe.netlify.app/",
       methods: ["GET", "POST"],
       credentials: true
    }
