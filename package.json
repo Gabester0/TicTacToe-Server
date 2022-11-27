@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Tic Tac Toe server",
   "main": "server.js",
-  "proxy": "http://localhost:5005/",
   "repository": "https://github.com/Gabester0/TicTacToe",
   "author": "Gabester0",
   "license": "Y",

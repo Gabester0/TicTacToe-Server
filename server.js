@@ -21,7 +21,8 @@ app.use(
    session({
       store: new RedisStore({client: redisClient}),
       secret: 'catsRCool',
-      resave: false
+      resave: false,
+      saveUninitialized: true
    })
 )
 
