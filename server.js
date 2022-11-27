@@ -21,7 +21,8 @@ app.use(
    session({
       store: new RedisStore({client: redisClient}),
       secret: 'catsRCool',
-      resave: false
+      resave: false,
+      saveUninitialized: true
    })
 )
 
@@ -72,5 +73,6 @@ io.on('connection', async (socket) => {
    })
  });
 
+const port = process.env.PORT || "8080";
 
-server.listen(process.env.PORT, ()=> console.log(`Server is listening on ${process.env.PORT}`));
+server.listen(port, ()=> console.log(`Server is listening on ${port}`));
