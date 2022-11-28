@@ -1,8 +1,8 @@
-const { redisClient } = require('../redis/redis');
+const { redis } = require('../redis/redis');
 const { solutions } = require('../gameLogic/static')
 
 const handleClick = async (game, client, click)=>{
-    const gameStateJSON = await redisClient.getAsync(`${game}`)
+    const gameStateJSON = await redis.get(`${game}`)
     const gameState = JSON.parse(gameStateJSON)
 
     const currentPlayerMoves = client === `X` ? gameState.xMoves : gameState.oMoves;
@@ -12,7 +12,7 @@ const handleClick = async (game, client, click)=>{
     if(currentPlayerMoves.length <= otherPlayerMoves.length){
         const curr = parseInt(click);
         if(gameState.board[curr] === null && !gameState.winner){
-            await redisClient.setAsync(`${game}.lastMove`, curr)
+            await redis.set(`${game}.lastMove`, curr)
             const updatedBoard = { ...gameState.board, [curr]: client }
 
             if(client === "X"){
@@ -20,14 +20,14 @@ const handleClick = async (game, client, click)=>{
                 // const updatedXMovesJSON = JSON.stringify(updatedXMoves)
                 const updatedGameState = { ...gameState, board: updatedBoard, xMoves: updatedXMoves}
                 const updatedGameStateJSON = JSON.stringify(updatedGameState)
-                await redisClient.setAsync(`${game}`, updatedGameStateJSON)
+                await redis.set(`${game}`, updatedGameStateJSON)
                 return updatedGameState
             } else {
                 const updatedOMoves = [...gameState.oMoves, curr]
                 // const updatedOMovesJSON = JSON.stringify(updatedOMoves)
                 const updatedGameState = { ...gameState, board: updatedBoard, oMoves: updatedOMoves}
                 const updatedGameStateJSON = JSON.stringify(updatedGameState)
-                await redisClient.setAsync(`${game}`, updatedGameStateJSON)
+                await redis.set(`${game}`, updatedGameStateJSON)
                 return updatedGameState
             }
         }
@@ -41,7 +41,7 @@ const checkWinner = async (gameState, currentMoves)=>{
     if(draw){
         const updatedGameState = { ...gameState, draw }
         const updatedGameStateJSON = JSON.stringify(updatedGameState)
-        await redisClient.setAsync(`${gameState.game}`, updatedGameStateJSON)
+        await redis.set(`${gameState.game}`, updatedGameStateJSON)
         return updatedGameState
     } else {
         // currentMoves (xMoves or oMoves), 
@@ -50,7 +50,7 @@ const checkWinner = async (gameState, currentMoves)=>{
             if( match.length === 3 ){
                 const updatedGameState = { ...gameState, winner: true, match }
                 const updatedGameStateJSON = JSON.stringify(updatedGameState)
-                await redisClient.setAsync(`${gameState.game}`, updatedGameStateJSON)
+                await redis.set(`${gameState.game}`, updatedGameStateJSON)
                 return updatedGameState
             }
         }
@@ -64,7 +64,7 @@ const changeTurn = async (client, gameState)=>{
     const player = client === `X` ? `O` : `X`;
     const updatedGameState = { ...gameState, player }
     const updatedGameStateJSON = JSON.stringify(updatedGameState);
-    await redisClient.setAsync(`${gameState.game}`, updatedGameStateJSON)
+    await redis.set(`${gameState.game}`, updatedGameStateJSON)
     return updatedGameState
 }
 

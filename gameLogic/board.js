@@ -1,4 +1,4 @@
-const { redisClient } = require('../redis/redis');
+const { redis } = require('../redis/redis');
 const { emptyBoard } = require('./static')
 
 
@@ -15,7 +15,7 @@ const initiateBoard = async(game)=>{
         match: []
     }
     const gameStateJSON = JSON.stringify(gameState)
-    await redisClient.setAsync(game, gameStateJSON)
+    await redis.set(game, gameStateJSON)
     return gameState
 }
 

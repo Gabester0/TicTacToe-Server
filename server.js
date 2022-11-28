@@ -11,7 +11,7 @@ const io = require('socket.io')(server, {
       credentials: true
    }
 });
-const { redisClient, RedisStore } = require('./redis/redis');
+const { redis, RedisStore } = require('./redis/redis');
 
 const { initiateBoard } = require('./gameLogic/board');
 const { findGame } = require('./gameLogic/findGame');
@@ -19,7 +19,7 @@ const { handleClick, checkWinner, changeTurn } = require('./gameLogic/gamePlay')
 
 app.use(
    session({
-      store: new RedisStore({client: redisClient}),
+      store: new RedisStore({client: redis}),
       secret: 'catsRCool',
       resave: false,
       saveUninitialized: true
@@ -63,12 +63,12 @@ io.on('connection', async (socket) => {
 
    socket.on(`quit`, async ({ game })=>{
       console.log(`Quit Event`)
-      const gameStateJSON = await redisClient.getAsync(`${game}`)
+      const gameStateJSON = await redis.get(`${game}`)
       const gameState = JSON.parse(gameStateJSON);
       if( !gameState.winner && !gameState.draw ) socket.to(game).emit(`quit`, game)
       if( !gameState.status ){
          const newGameState = JSON.stringify( { ...gameState, status: true } )
-         await redisClient.setAsync(`${game}`, newGameState)
+         await redis.set(`${game}`, newGameState)
       }
    })
  });
