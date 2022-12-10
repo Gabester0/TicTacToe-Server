@@ -8,7 +8,8 @@ const io = require('socket.io')(server, {
    cors: {
       origin: "https://eipper-tictactoe.netlify.app/",
       methods: ["GET", "POST"],
-      credentials: true
+      credentials: true,
+      maxHttpBufferSize: 1e9
    }
 });
 const { redisClient, RedisStore } = require('./redis/redis');
