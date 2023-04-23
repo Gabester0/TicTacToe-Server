@@ -1,7 +1,7 @@
 const { redisClient } = require('../redis/redis');
 
 let noGames = true;
-
+// TODO: Figure out how we are getting games with no status
 const findGame = async (socket, io)=>{
    if(noGames){    //Handle Creating First Game
       noGames = false
@@ -13,14 +13,13 @@ const findGame = async (socket, io)=>{
       socket.emit("join", { ...gameStatus, player: `X`, note: `This is game #${1} and player X has joined the game.  Waiting for a second player`}) //Communicate to first client Game number and player (X)
       return gameStatus
    }else {    //Handle adding second player, or creating additional games
-
       const gamesJSON = await redisClient.get('games');
       const games = JSON.parse(gamesJSON);
       console.log({games})
       const latestGame = games[games.length - 1]
       const latestGameStateJSON = await redisClient.get(`${latestGame}`)
       const latestGameState = JSON.parse(latestGameStateJSON)
-
+console.log({latestGameState})
       if(latestGameState.status === false){    //Add Player to existing Game
          socket.join(`${latestGame}`)
          const updatedLatestGameState = { ...latestGameState, status: true}

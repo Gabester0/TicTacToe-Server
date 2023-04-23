@@ -32,10 +32,8 @@ io.on("connect_error", (err) => {
  });
 
 io.on('connection', async (socket) => { 
-   console.log(`Socket Connected`, socket.id)
-
    const { game, status } = await findGame(socket, io)
-   console.log(`SERVER.js line 32`, game, status)
+   console.log(`SERVER.js line 38`, game, status)
    if(status){
       const initialGame = await initiateBoard(game)
       console.log(`emitting start, `, initialGame)
