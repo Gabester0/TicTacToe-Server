@@ -4,12 +4,12 @@ const server = require('http').createServer(app);
 
 const session = require('express-session');
 const io = require('socket.io')(server, {
-   allowEIO3: true,
+   // allowEIO3: true,
    cors: {
-      origin: "https://eipper-tictactoe.netlify.app/",
+      // origin: "https://eipper-tictactoe.netlify.app/",
+      origin: "*",
       methods: ["GET", "POST"],
       credentials: true,
-      maxHttpBufferSize: 1e9
    }
 });
 const { redisClient, RedisStore } = require('./redis/redis');
@@ -26,6 +26,10 @@ app.use(
       saveUninitialized: true
    })
 )
+
+io.on("connect_error", (err) => {
+   console.log(`connect_error due to ${err.message}`);
+ });
 
 io.on('connection', async (socket) => { 
    console.log(`Socket Connected`, socket.id)
@@ -64,12 +68,12 @@ io.on('connection', async (socket) => {
 
    socket.on(`quit`, async ({ game })=>{
       console.log(`Quit Event`)
-      const gameStateJSON = await redisClient.getAsync(`${game}`)
+      const gameStateJSON = await redisClient.get(`${game}`)
       const gameState = JSON.parse(gameStateJSON);
       if( !gameState.winner && !gameState.draw ) socket.to(game).emit(`quit`, game)
       if( !gameState.status ){
          const newGameState = JSON.stringify( { ...gameState, status: true } )
-         await redisClient.setAsync(`${game}`, newGameState)
+         await redisClient.set(`${game}`, newGameState)
       }
    })
  });
