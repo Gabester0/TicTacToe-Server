@@ -15,7 +15,7 @@ const initiateBoard = async(game)=>{
         match: []
     }
     const gameStateJSON = JSON.stringify(gameState)
-    await redisClient.setAsync(game, gameStateJSON)
+    await redisClient.set(game, gameStateJSON)
     return gameState
 }
 
